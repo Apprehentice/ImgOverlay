@@ -61,5 +61,10 @@ namespace ImgOverlay
         {
             (Owner as MainWindow)?.ChangeOpacity((float)e.NewValue);
         }
+
+        private void RotateSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            (Owner as MainWindow)?.ChangeRotation((float)e.NewValue);
+        }
     }
 }
