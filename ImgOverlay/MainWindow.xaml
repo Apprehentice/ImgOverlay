@@ -18,7 +18,7 @@
         <SolidColorBrush Opacity="0" Color="White" />
     </Window.Background>
     <Grid >
-        <Image x:Name="DisplayImage" />
+        <Image x:Name="DisplayImage"></Image>
         <ResizeGrip />
     </Grid>
 </Window>

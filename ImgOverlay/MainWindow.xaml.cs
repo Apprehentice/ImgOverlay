@@ -59,6 +59,24 @@ namespace ImgOverlay
             DisplayImage.Opacity = opacity;
         }
 
+        public void ChangeRotation(float angle)
+        {
+            // Create a transform to rotate the button
+            RotateTransform myRotateTransform = new RotateTransform();
+
+            // Set the rotation of the transform.
+            myRotateTransform.Angle = angle;
+
+            // Create a TransformGroup to contain the transforms
+            // and add the transforms to it.
+            TransformGroup myTransformGroup = new TransformGroup();
+            myTransformGroup.Children.Add(myRotateTransform);
+
+            DisplayImage.RenderTransformOrigin = new Point(0.5, 0.5);
+            // Associate the transforms to the button.
+            DisplayImage.RenderTransform = myTransformGroup;
+        }
+
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)

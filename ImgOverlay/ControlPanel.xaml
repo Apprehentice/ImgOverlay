@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImgOverlay"
         mc:Ignorable="d"
-        Title="Image Overlay" Height="80" Width="300"
+        Title="Image Overlay" Height="122.925" Width="300"
         ResizeMode="CanMinimize">
     <Grid>
         <Grid.RowDefinitions>
@@ -18,7 +18,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            
+
             <Button x:Name="LoadButton" Grid.Column="0" Click="LoadButton_Click">
                 <TextBlock Text="Load..." />
             </Button>
@@ -27,8 +27,11 @@
             </ToggleButton>
         </Grid>
 
-        <Grid Grid.Row="1">
-            <Slider x:Name="OpacitySlider" Minimum="0" Maximum="1" Value="1" ValueChanged="OpacitySlider_ValueChanged" />
+        <Grid Grid.Row="1" Margin="0,0,0,16">
+            <Slider x:Name="OpacitySlider" Minimum="0" Maximum="1" Value="1" ValueChanged="OpacitySlider_ValueChanged" Margin="0,3,0,6" />
+        </Grid>
+        <Grid Margin="0,22,0,16" Grid.Row="1">
+            <Slider x:Name="RotateSlider" Minimum="-180" Maximum="180" Value="0" ValueChanged="RotateSlider_ValueChanged" Margin="0,3,0,-15" />
         </Grid>
     </Grid>
 </Window>
