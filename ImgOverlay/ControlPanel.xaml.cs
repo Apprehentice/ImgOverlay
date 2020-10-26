@@ -1,19 +1,7 @@
 ﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace ImgOverlay
 {
@@ -65,6 +53,36 @@ namespace ImgOverlay
         private void RotateSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             (Owner as MainWindow)?.ChangeRotation((float)e.NewValue);
+        }
+
+        private void ControlPanel_DragOver(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] s = (string[]) e.Data.GetData(DataFormats.FileDrop, false);
+                if (s.Length == 1)
+                {
+                    e.Effects = DragDropEffects.Move;
+                }
+                else
+                {
+                    e.Effects = DragDropEffects.None;
+                }
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
+            e.Handled = true;
+        }
+
+        private void ControlPanel_Drop(object sender, DragEventArgs e)
+        {
+            string[] s = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            if (s.Length == 1)
+            {
+                (Owner as MainWindow)?.LoadImage(s[0]);
+            }
         }
     }
 }
