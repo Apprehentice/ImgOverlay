@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace ImgOverlay
 {
@@ -21,17 +12,25 @@ namespace ImgOverlay
     /// </summary>
     public partial class MainWindow : Window
     {
-        ControlPanel cp = new ControlPanel();
+        private ControlPanel cp = new ControlPanel();
 
         public MainWindow()
         {
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
             InitializeComponent();
+
+            this.SizeChanged += Window_SizeChanged;
         }
 
         public void LoadImage(string path)
         {
+            if (System.IO.Directory.Exists(path))
+            {
+                MessageBox.Show("Cannot open folders.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             if (!System.IO.File.Exists(path))
             {
                 MessageBox.Show("The selected image file does not exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -42,7 +41,7 @@ namespace ImgOverlay
             try
             {
                 img.BeginInit();
-                    img.UriSource = new Uri(path);
+                img.UriSource = new Uri(path);
                 img.EndInit();
             }
             catch (Exception e)
@@ -52,6 +51,7 @@ namespace ImgOverlay
             }
 
             DisplayImage.Source = img;
+            SetImageSize();
         }
 
         public void ChangeOpacity(float opacity)
@@ -72,9 +72,29 @@ namespace ImgOverlay
             TransformGroup myTransformGroup = new TransformGroup();
             myTransformGroup.Children.Add(myRotateTransform);
 
-            DisplayImage.RenderTransformOrigin = new Point(0.5, 0.5);
+            Container.RenderTransformOrigin = new Point(0.5, 0.5);
             // Associate the transforms to the button.
-            DisplayImage.RenderTransform = myTransformGroup;
+            Container.RenderTransform = myTransformGroup;
+        }
+
+        private void SetImageSize()
+        {
+            if (DisplayImage.Source != null)
+            {
+                // Set image size so that corners stay in the window when rotating
+                var w = DisplayImage.Source.Width;
+                var h = DisplayImage.Source.Height;
+                var diag = Math.Sqrt(w * w + h * h);
+
+                var scale = Math.Min(this.Width, this.Height) / diag;
+                Container.MaxWidth = w * scale;
+                Container.MaxHeight = h * scale;
+            }
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            SetImageSize();
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)

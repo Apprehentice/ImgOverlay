@@ -5,33 +5,144 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImgOverlay"
         mc:Ignorable="d"
-        Title="Image Overlay" Height="122.925" Width="300"
-        ResizeMode="CanMinimize">
+        Title="Image Overlay"
+        Width="300"
+        ResizeMode="CanMinimize"
+        SizeToContent="Height">
+    <Window.Resources>
+        <Style TargetType="{x:Type ToggleButton}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Viewbox>
+                            <Border x:Name="Border" CornerRadius="10"
+                            Background="#FFFFFFFF"
+                            Width="40" Height="20">
+                                <Border.Effect>
+                                    <DropShadowEffect ShadowDepth="0.5" Direction="0" Opacity="0.3" />
+                                </Border.Effect>
+                                <Ellipse x:Name="Ellipse" Fill="#FFFFFFFF" Stretch="Uniform"
+                                     Margin="2 1 2 1"
+                                     Stroke="Gray" StrokeThickness="0.2"
+                                     HorizontalAlignment="Stretch">
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect BlurRadius="10" ShadowDepth="1" Opacity="0.3" Direction="260" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                            </Border>
+                        </Viewbox>
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="Checked">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                                            Storyboard.TargetName="Border"
+                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                            To="#FF4CD661"
+                                            Duration="0:0:0.2" />
+                                        <ThicknessAnimation
+                                            Storyboard.TargetName="Ellipse"
+                                            Storyboard.TargetProperty="Margin"
+                                            To="20 1 2 1"
+                                            Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="Unchecked">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                                            Storyboard.TargetName="Border"
+                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                            To="White"
+                                            Duration="0:0:0.2" />
+                                        <ThicknessAnimation
+                                            Storyboard.TargetName="Ellipse"
+                                            Storyboard.TargetProperty="Margin"
+                                            To="2 1 2 1"
+                                            Duration="0:0:0.2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <local:OnOffConverter x:Key="OnOffConverter" />
+    </Window.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="LoadButton" Grid.Column="0" Click="LoadButton_Click">
+            <Button x:Name="LoadButton" Grid.Column="0" Click="LoadButton_Click" Margin="5">
                 <TextBlock Text="Load..." />
             </Button>
-            <ToggleButton x:Name="DragButton" Grid.Column="1" Click="DragButton_Click">
-                <TextBlock Text="Move Image" />
-            </ToggleButton>
+            <Grid Grid.Column="1" Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Content="Moveable Image" VerticalAlignment="Center" Padding="0" Margin="0,0,0,3"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <ToggleButton x:Name="DragButton" Click="DragButton_Click" HorizontalAlignment="Left" />
+                    <Label Content="{Binding IsChecked, ElementName=DragButton, Converter={StaticResource OnOffConverter}}" VerticalAlignment="Center" Padding="0" Margin="5,0,0,0" />
+                </StackPanel>
+            </Grid>
         </Grid>
 
-        <Grid Grid.Row="1" Margin="0,0,0,16">
-            <Slider x:Name="OpacitySlider" Minimum="0" Maximum="1" Value="1" ValueChanged="OpacitySlider_ValueChanged" Margin="0,3,0,6" />
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" Name="TransparencyRow" Margin="5">
+            <StackPanel>
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                    <Label Content="Transparency: " Padding="0" />
+                    <Label Content="{Binding Value, ElementName=OpacitySlider}" Padding="0" Panel.ZIndex="-1" ContentStringFormat="{}{0:0.##}%" />
+                </StackPanel>
+                <Slider
+                    x:Name="OpacitySlider"
+                    Minimum="0"
+                    Maximum="100"
+                    Value="100"
+                    TickFrequency="1"
+                    IsSnapToTickEnabled="True"
+                    ValueChanged="OpacitySlider_ValueChanged"
+                    HorizontalAlignment="Center"
+                    Width="{Binding Path=ActualWidth, ElementName=TransparencyRow}"
+                    MouseDoubleClick="OpacitySlider_DoubleClicked" />
+            </StackPanel>
         </Grid>
-        <Grid Margin="0,22,0,16" Grid.Row="1">
-            <Slider x:Name="RotateSlider" Minimum="-180" Maximum="180" Value="0" ValueChanged="RotateSlider_ValueChanged" Margin="0,3,0,-15" />
+        <Grid Grid.Row="2" Grid.ColumnSpan="2" Name="RotationRow" Margin="5">
+            <StackPanel>
+                <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+                    <Label Content="Rotation: " Padding="0" />
+                    <Label Content="{Binding Value, ElementName=RotateSlider}" ContentStringFormat="{}{0:0.##}°" Padding="0" Panel.ZIndex="-1" />
+                </StackPanel>
+                <Slider
+                    x:Name="RotateSlider"
+                    Minimum="-180"
+                    Maximum="180"
+                    Value="0"
+                    TickFrequency="1"
+                    IsSnapToTickEnabled="True"
+                    ValueChanged="RotateSlider_ValueChanged"
+                    Width="{Binding Path=ActualWidth, ElementName=RotationRow}"
+                    HorizontalAlignment="Center"
+                    MouseDoubleClick="RotateSlider_DoubleClicked" />
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>
