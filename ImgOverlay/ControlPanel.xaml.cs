@@ -7,16 +7,16 @@ using System.Windows.Interop;
 
 namespace ImgOverlay
 {
-    public class OnOffConverter : IValueConverter
+    public class YesNoConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return (bool)value ? "On" : "Off";
+            return (bool)value ? "Yes" : "No";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return value.ToString() == "On";
+            return value.ToString() == "Yes";
         }
     }
 
@@ -35,20 +35,30 @@ namespace ImgOverlay
             if (Owner == null)
                 return;
 
-            var opaque = (sender as ToggleButton).IsChecked.Value;
-            Owner.IsHitTestVisible = opaque;
+            var locked = (sender as ToggleButton).IsChecked.Value;
+            SetLocked(locked);
+
+            e.Handled = true;
+        }
+
+        private void SetLocked(bool locked)
+        {
+            Owner.IsHitTestVisible = !locked;
 
             var hwnd = new WindowInteropHelper(Owner).Handle;
-            if (opaque)
-            {
-                WindowsServices.SetWindowExOpaque(hwnd);
-            }
-            else
+            if (locked)
             {
                 WindowsServices.SetWindowExTransparent(hwnd);
             }
+            else
+            {
+                WindowsServices.SetWindowExOpaque(hwnd);
+            }
+        }
 
-            e.Handled = true;
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetLocked(DragButton.IsChecked.Value);
         }
 
         private void LoadButton_Click(object sender, RoutedEventArgs e)

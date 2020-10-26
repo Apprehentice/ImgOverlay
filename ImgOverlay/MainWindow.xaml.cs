@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -105,6 +106,8 @@ namespace ImgOverlay
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            WindowMovePreventer.AddWindow(this);
+
             cp.Owner = this;
             cp.Show();
             cp.Closed += (o, ev) =>
@@ -112,11 +115,45 @@ namespace ImgOverlay
                 this.Close();
             };
         }
+    }
+}
 
-        private void Window_SourceInitialized(object sender, EventArgs e)
+public static class WindowMovePreventer
+{
+    /// <summary>
+    /// Prevent Windows from moving window back to top of screen if window goes above top of screen.
+    /// https://stackoverflow.com/questions/328127/how-do-i-move-a-wpf-window-into-a-negative-top-value
+    /// </summary>
+    public struct WINDOWPOS
+    {
+        public IntPtr hwnd;
+        public IntPtr hwndInsertAfter;
+        public int x;
+        public int y;
+        public int cx;
+        public int cy;
+        public UInt32 flags;
+    };
+
+    public static void AddWindow(Window window)
+    {
+        HwndSource source = HwndSource.FromHwnd(new WindowInteropHelper(window).Handle);
+        source.AddHook(new HwndSourceHook(WndProc));
+    }
+
+    private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        switch (msg)
         {
-            var hwnd = new WindowInteropHelper(this).Handle;
-            WindowsServices.SetWindowExTransparent(hwnd);
+            case 0x46://WM_WINDOWPOSCHANGING
+                if (Mouse.LeftButton != MouseButtonState.Pressed)
+                {
+                    WINDOWPOS wp = (WINDOWPOS)Marshal.PtrToStructure(lParam, typeof(WINDOWPOS));
+                    wp.flags = wp.flags | 2; //SWP_NOMOVE
+                    Marshal.StructureToPtr(wp, lParam, false);
+                }
+                break;
         }
+        return IntPtr.Zero;
     }
 }

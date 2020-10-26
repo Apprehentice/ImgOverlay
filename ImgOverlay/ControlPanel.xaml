@@ -8,7 +8,9 @@
         Title="Image Overlay"
         Width="300"
         ResizeMode="CanMinimize"
-        SizeToContent="Height">
+        SizeToContent="Height"
+        Loaded="Window_Loaded"
+>
     <Window.Resources>
         <Style TargetType="{x:Type ToggleButton}">
             <Setter Property="Template">
@@ -30,47 +32,55 @@
                                     </Ellipse.Effect>
                                 </Ellipse>
                             </Border>
+
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="MouseOver" />
+                                    <VisualState x:Name="Pressed" />
+                                    <VisualState x:Name="Disabled" />
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Checked" >
+                                        <Storyboard>
+                                            <ColorAnimation
+                                                Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                To="#FF4CD661"
+                                                Duration="0:0:0.2" 
+                                            />
+                                            <ThicknessAnimation
+                                                Storyboard.TargetName="Ellipse"
+                                                Storyboard.TargetProperty="Margin"
+                                                To="20 1 2 1"
+                                                Duration="0:0:0.2" 
+                                            />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unchecked">
+                                        <Storyboard>
+                                            <ColorAnimation
+                                                Storyboard.TargetName="Border"
+                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                Duration="0:0:0.2" 
+                                            />
+                                            <ThicknessAnimation
+                                                Storyboard.TargetName="Ellipse"
+                                                Storyboard.TargetProperty="Margin"
+                                                Duration="0:0:0.2" 
+                                            />
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Indeterminate" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
                         </Viewbox>
-                        <ControlTemplate.Triggers>
-                            <EventTrigger RoutedEvent="Checked">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation
-                                            Storyboard.TargetName="Border"
-                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                            To="#FF4CD661"
-                                            Duration="0:0:0.2" />
-                                        <ThicknessAnimation
-                                            Storyboard.TargetName="Ellipse"
-                                            Storyboard.TargetProperty="Margin"
-                                            To="20 1 2 1"
-                                            Duration="0:0:0.2" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                            <EventTrigger RoutedEvent="Unchecked">
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation
-                                            Storyboard.TargetName="Border"
-                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                            To="White"
-                                            Duration="0:0:0.2" />
-                                        <ThicknessAnimation
-                                            Storyboard.TargetName="Ellipse"
-                                            Storyboard.TargetProperty="Margin"
-                                            To="2 1 2 1"
-                                            Duration="0:0:0.2" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </EventTrigger>
-                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <local:OnOffConverter x:Key="OnOffConverter" />
+        <local:YesNoConverter x:Key="YesNoConverter" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -98,10 +108,10 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" Content="Moveable Image" VerticalAlignment="Center" Padding="0" Margin="0,0,0,3"/>
+                <Label Grid.Row="0" Content="Movement Locked" VerticalAlignment="Center" Padding="0" Margin="0,0,0,3"/>
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <ToggleButton x:Name="DragButton" Click="DragButton_Click" HorizontalAlignment="Left" />
-                    <Label Content="{Binding IsChecked, ElementName=DragButton, Converter={StaticResource OnOffConverter}}" VerticalAlignment="Center" Padding="0" Margin="5,0,0,0" />
+                    <Label Content="{Binding IsChecked, ElementName=DragButton, Converter={StaticResource YesNoConverter}}" VerticalAlignment="Center" Padding="0" Margin="5,0,0,0" />
                 </StackPanel>
             </Grid>
         </Grid>

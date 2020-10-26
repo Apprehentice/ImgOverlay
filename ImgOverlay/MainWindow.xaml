@@ -10,9 +10,7 @@
         WindowStyle="None"
         AllowsTransparency="True"
         ResizeMode="CanResizeWithGrip"
-        IsHitTestVisible="False"
         Loaded="Window_Loaded"
-        SourceInitialized="Window_SourceInitialized"
         MouseDown="Window_MouseDown"
         Cursor="SizeAll"
 >
