@@ -32,6 +32,12 @@ namespace ImgOverlay
 
         public void LoadImage(string path)
         {
+            if (System.IO.Directory.Exists(path))
+            {
+                MessageBox.Show("Cannot open folders.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             if (!System.IO.File.Exists(path))
             {
                 MessageBox.Show("The selected image file does not exist.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
