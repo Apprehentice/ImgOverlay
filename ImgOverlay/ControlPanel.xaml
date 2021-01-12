@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:ImgOverlay"
         mc:Ignorable="d"
         Title="Image Overlay" Height="122.925" Width="300"
-        ResizeMode="CanMinimize">
+        ResizeMode="CanMinimize" 
+        DragOver="ControlPanel_DragOver" 
+        AllowDrop="True" 
+        Drop="ControlPanel_Drop">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
