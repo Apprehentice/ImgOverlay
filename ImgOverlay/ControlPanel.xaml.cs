@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
+using System.Windows.Controls;
 
 namespace ImgOverlay
 {
@@ -13,6 +14,7 @@ namespace ImgOverlay
         public ControlPanel()
         {
             InitializeComponent();
+            EnableImageControls();
         }
 
         private void DragButton_Click(object sender, RoutedEventArgs e)
@@ -42,6 +44,21 @@ namespace ImgOverlay
             if (openDialog.ShowDialog() == true)
             {
                 (Owner as MainWindow)?.LoadImage(openDialog.FileName);
+                EnableImageControls();
+            }
+        }
+
+        private void EnableImageControls()
+        {
+            Control[] controls = { this.DragButton, this.SizeButton, this.OpacitySlider, this.RotateSlider };
+            bool enable = false;
+            if(((Owner as MainWindow)?.ImageIsLoaded).HasValue)
+            {
+                enable = ((Owner as MainWindow)?.ImageIsLoaded).Value;
+            }
+            foreach (Control control in controls)
+            {
+                control.IsEnabled = enable;
             }
         }
 
@@ -83,6 +100,11 @@ namespace ImgOverlay
             {
                 (Owner as MainWindow)?.LoadImage(s[0]);
             }
+        }
+
+        private void SizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            (Owner as MainWindow)?.ActualSize();
         }
     }
 }

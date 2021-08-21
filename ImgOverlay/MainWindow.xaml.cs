@@ -23,6 +23,11 @@ namespace ImgOverlay
     {
         ControlPanel cp = new ControlPanel();
 
+        public bool ImageIsLoaded { get; set; } = false;
+
+        public double? ImageSourceHeight { get; set; } = null;
+        public double? ImageSourceWidth { get; set; } = null;
+
         public MainWindow()
         {
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
@@ -50,6 +55,9 @@ namespace ImgOverlay
                 img.BeginInit();
                     img.UriSource = new Uri(path);
                 img.EndInit();
+                ImageIsLoaded = true;
+                ImageSourceHeight = img.Height;
+                ImageSourceWidth = img.Width;
             }
             catch (Exception e)
             {
@@ -81,6 +89,16 @@ namespace ImgOverlay
             DisplayImage.RenderTransformOrigin = new Point(0.5, 0.5);
             // Associate the transforms to the button.
             DisplayImage.RenderTransform = myTransformGroup;
+        }
+
+        public void ActualSize()
+        {
+            if (ImageSourceHeight.HasValue && ImageSourceWidth.HasValue)
+            {
+                this.Width = ImageSourceWidth.Value;
+                this.Height = ImageSourceHeight.Value;
+
+            }
         }
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
