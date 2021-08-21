@@ -68,6 +68,18 @@ namespace ImgOverlay
             DisplayImage.Source = img;
         }
 
+        public void Show(bool visible)
+        {
+            if (visible)
+            {
+                Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Visibility = Visibility.Hidden;
+            }
+        }
+
         public void ChangeOpacity(float opacity)
         {
             DisplayImage.Opacity = opacity;

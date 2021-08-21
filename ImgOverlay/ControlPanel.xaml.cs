@@ -50,7 +50,7 @@ namespace ImgOverlay
 
         private void EnableImageControls()
         {
-            Control[] controls = { this.DragButton, this.SizeButton, this.OpacitySlider, this.RotateSlider };
+            Control[] controls = { DragButton, SizeButton, OpacitySlider, RotateSlider, HideButton };
             bool enable = false;
             if(((Owner as MainWindow)?.ImageIsLoaded).HasValue)
             {
@@ -105,6 +105,18 @@ namespace ImgOverlay
         private void SizeButton_Click(object sender, RoutedEventArgs e)
         {
             (Owner as MainWindow)?.ActualSize();
+        }
+
+
+        private void HideButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (HideButton.IsChecked.HasValue)
+            {
+                (Owner as MainWindow).Show(!HideButton.IsChecked.Value);
+            }
+
+            
+
         }
     }
 }

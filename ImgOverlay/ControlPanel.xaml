@@ -22,6 +22,7 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
             <Button x:Name="LoadButton" Grid.Column="0" Click="LoadButton_Click">
@@ -33,13 +34,16 @@
             <Button x:Name="SizeButton" Grid.Column="2" Click="SizeButton_Click">
                 <TextBlock Text="Actual Size" />
             </Button>
+            <ToggleButton x:Name="HideButton" Grid.Column="3" Click="HideButton_Click">
+                <TextBlock Text="Hide" />
+            </ToggleButton>
         </Grid>
 
         <Grid Grid.Row="1" >
-            <Slider x:Name="OpacitySlider" Minimum="0" Maximum="1" Value="1" ValueChanged="OpacitySlider_ValueChanged" Margin="0,3,0,6" />
+            <Slider x:Name="OpacitySlider" Minimum="0" Maximum="1" Value="1" ValueChanged="OpacitySlider_ValueChanged" Margin="0,6,0,0" />
         </Grid>
         <Grid  Grid.Row="2">
-            <Slider x:Name="RotateSlider" Minimum="-180" Maximum="180" Value="0" ValueChanged="RotateSlider_ValueChanged" Margin="0,3,0,-15" />
+            <Slider x:Name="RotateSlider" Minimum="-180" Maximum="180" Value="0" ValueChanged="RotateSlider_ValueChanged" Margin="0,6,0,0" />
         </Grid>
     </Grid>
 </Window>
