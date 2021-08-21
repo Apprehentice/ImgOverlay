@@ -59,7 +59,7 @@ namespace ImgOverlay
                 ImageSourceHeight = img.Height;
                 ImageSourceWidth = img.Width;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageBox.Show("Error loading image. Perhaps its format is unsupported?", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
