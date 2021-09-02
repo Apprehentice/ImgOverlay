@@ -9,7 +9,7 @@
         ResizeMode="CanMinimize" 
         DragOver="ControlPanel_DragOver" 
         AllowDrop="True" 
-        Drop="ControlPanel_Drop">
+        Drop="ControlPanel_Drop" KeyDown="Window_KeyDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
