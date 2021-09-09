@@ -123,27 +123,32 @@ namespace ImgOverlay
         {
             if ((e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.RightCtrl)) && e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.V))
             {
-                //MessageBox.Show("paste");
                 (Owner as MainWindow).LoadClipboard();
                 EnableImageControls();
-
             }
-            //e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.LeftCtrl)
-            //MessageBox.Show(e.Key.ToString());
-            //if (e.KeyChar >= 48 && e.KeyChar <= 57)
-            //{
-            //    MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' pressed.");
 
-            //    switch (e.KeyChar)
+            //if (DragButton.IsChecked.Value && DragButton.IsEnabled)
+            //{
+            //    if (e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.A)) 
             //    {
-            //        case (char)49:
-            //        case (char)52:
-            //        case (char)55:
-            //            MessageBox.Show($"Form.KeyPress: '{e.KeyChar}' consumed.");
-            //            e.Handled = true;
-            //            break;
+            //        (Owner as MainWindow).NudgeX(-1);
             //    }
+            //    if (e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.D))
+            //    {
+            //        (Owner as MainWindow).NudgeX(1);
+            //    }
+            //    if (e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.W))
+            //    {
+            //        (Owner as MainWindow).NudgeY(-1);
+            //    }
+            //    if (e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.S))
+            //    {
+            //        (Owner as MainWindow).NudgeY(1);
+            //    }
+
             //}
+
+
         }
     }
 }

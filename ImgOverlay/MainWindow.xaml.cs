@@ -36,6 +36,17 @@ namespace ImgOverlay
             InitializeComponent();
         }
 
+        public void NudgeY(int pixels)
+        {
+            this.Top += pixels;
+
+        }
+        public void NudgeX(int pixels)
+        {
+            this.Left += pixels;
+
+        }
+
         public void LoadImage(string path)
         {
             if (System.IO.Directory.Exists(path))
@@ -179,5 +190,30 @@ namespace ImgOverlay
             var hwnd = new WindowInteropHelper(this).Handle;
             WindowsServices.SetWindowExTransparent(hwnd);
         }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+
+                if (e.KeyboardDevice.IsKeyDown(Key.Left))
+                {
+                    NudgeX(-1);
+                }
+                if (e.KeyboardDevice.IsKeyDown(Key.Right))
+                {
+                    NudgeX(1);
+                }
+                if (e.KeyboardDevice.IsKeyDown(Key.Up))
+                {
+                    NudgeY(-1);
+                }
+                if (e.KeyboardDevice.IsKeyDown(Key.Down))
+                {
+                    NudgeY(1);
+                }
+
+
+
+        }
+
     }
 }
