@@ -13,7 +13,7 @@
         IsHitTestVisible="False"
         Loaded="Window_Loaded"
         SourceInitialized="Window_SourceInitialized"
-        MouseDown="Window_MouseDown">
+        MouseDown="Window_MouseDown" KeyDown="Window_KeyDown">
     <Window.Background>
         <SolidColorBrush Opacity="0" Color="White" />
     </Window.Background>

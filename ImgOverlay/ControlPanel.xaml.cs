@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Interop;
+using System.Windows.Controls;
 
 namespace ImgOverlay
 {
@@ -13,6 +14,7 @@ namespace ImgOverlay
         public ControlPanel()
         {
             InitializeComponent();
+            EnableImageControls();
         }
 
         private void DragButton_Click(object sender, RoutedEventArgs e)
@@ -42,6 +44,21 @@ namespace ImgOverlay
             if (openDialog.ShowDialog() == true)
             {
                 (Owner as MainWindow)?.LoadImage(openDialog.FileName);
+                EnableImageControls();
+            }
+        }
+
+        private void EnableImageControls()
+        {
+            Control[] controls = { DragButton, SizeButton, OpacitySlider, RotateSlider, HideButton };
+            bool enable = false;
+            if(((Owner as MainWindow)?.ImageIsLoaded).HasValue)
+            {
+                enable = ((Owner as MainWindow)?.ImageIsLoaded).Value;
+            }
+            foreach (Control control in controls)
+            {
+                control.IsEnabled = enable;
             }
         }
 
@@ -83,6 +100,55 @@ namespace ImgOverlay
             {
                 (Owner as MainWindow)?.LoadImage(s[0]);
             }
+        }
+
+        private void SizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            (Owner as MainWindow)?.ActualSize();
+        }
+
+
+        private void HideButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (HideButton.IsChecked.HasValue)
+            {
+                (Owner as MainWindow).Show(!HideButton.IsChecked.Value);
+            }
+
+            
+
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if ((e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.LeftCtrl) || e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.RightCtrl)) && e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.V))
+            {
+                (Owner as MainWindow).LoadClipboard();
+                EnableImageControls();
+            }
+
+            //if (DragButton.IsChecked.Value && DragButton.IsEnabled)
+            //{
+            //    if (e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.A)) 
+            //    {
+            //        (Owner as MainWindow).NudgeX(-1);
+            //    }
+            //    if (e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.D))
+            //    {
+            //        (Owner as MainWindow).NudgeX(1);
+            //    }
+            //    if (e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.W))
+            //    {
+            //        (Owner as MainWindow).NudgeY(-1);
+            //    }
+            //    if (e.KeyboardDevice.IsKeyDown(System.Windows.Input.Key.S))
+            //    {
+            //        (Owner as MainWindow).NudgeY(1);
+            //    }
+
+            //}
+
+
         }
     }
 }

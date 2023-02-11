@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +24,27 @@ namespace ImgOverlay
     {
         ControlPanel cp = new ControlPanel();
 
+        public bool ImageIsLoaded { get; set; } = false;
+
+        public double? ImageSourceHeight { get; set; } = null;
+        public double? ImageSourceWidth { get; set; } = null;
+
         public MainWindow()
         {
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
             InitializeComponent();
+        }
+
+        public void NudgeY(int pixels)
+        {
+            this.Top += pixels;
+
+        }
+        public void NudgeX(int pixels)
+        {
+            this.Left += pixels;
+
         }
 
         public void LoadImage(string path)
@@ -48,16 +65,75 @@ namespace ImgOverlay
             try
             {
                 img.BeginInit();
-                    img.UriSource = new Uri(path);
+                img.UriSource = new Uri(path);
                 img.EndInit();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                MessageBox.Show("Error loading image. Perhaps its format is unsupported?", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error loading image from storage. Perhaps its format is unsupported?", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            DisplayImage.Source = img;
+            ShowImage(img);
+        }
+
+        private void ShowImage(BitmapImage img)
+        {
+            try
+            {
+                DisplayImage.Source = img;
+                ImageIsLoaded = true;
+                ImageSourceHeight = img.Height;
+                ImageSourceWidth = img.Width;
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error showing image. Perhaps its format is unsupported?", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public void LoadClipboard()
+        {
+            BitmapImage bImg = new BitmapImage();
+            try
+            {
+                BitmapSource bitmapSource = Clipboard.GetImage();
+
+                PngBitmapEncoder encoder = new PngBitmapEncoder();
+                MemoryStream memoryStream = new MemoryStream();
+
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                encoder.Save(memoryStream);
+
+                memoryStream.Position = 0;
+                bImg.BeginInit();
+                bImg.StreamSource = new MemoryStream(memoryStream.ToArray());
+                bImg.EndInit();
+
+                memoryStream.Close();
+                bImg.Freeze();
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error loading image from clipboard. Perhaps its format is unsupported?", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            ShowImage(bImg);
+        }
+
+        public void Show(bool visible)
+        {
+            if (visible)
+            {
+                Visibility = Visibility.Visible;
+            }
+            else
+            {
+                Visibility = Visibility.Hidden;
+            }
         }
 
         public void ChangeOpacity(float opacity)
@@ -83,6 +159,16 @@ namespace ImgOverlay
             DisplayImage.RenderTransform = myTransformGroup;
         }
 
+        public void ActualSize()
+        {
+            if (ImageSourceHeight.HasValue && ImageSourceWidth.HasValue)
+            {
+                this.Width = ImageSourceWidth.Value;
+                this.Height = ImageSourceHeight.Value;
+
+            }
+        }
+
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
@@ -104,5 +190,30 @@ namespace ImgOverlay
             var hwnd = new WindowInteropHelper(this).Handle;
             WindowsServices.SetWindowExTransparent(hwnd);
         }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+
+                if (e.KeyboardDevice.IsKeyDown(Key.Left))
+                {
+                    NudgeX(-1);
+                }
+                if (e.KeyboardDevice.IsKeyDown(Key.Right))
+                {
+                    NudgeX(1);
+                }
+                if (e.KeyboardDevice.IsKeyDown(Key.Up))
+                {
+                    NudgeY(-1);
+                }
+                if (e.KeyboardDevice.IsKeyDown(Key.Down))
+                {
+                    NudgeY(1);
+                }
+
+
+
+        }
+
     }
 }
